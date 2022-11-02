@@ -22,7 +22,9 @@ export default defineConfig({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: [...Object.keys(pkg.dependencies), /^node:/].filter(x => typeof x !== "string" || ["fs-temp", "append-field"].includes(x) ),
+      external: [...Object.keys(pkg.dependencies), /^node:/].filter(x => {
+        return typeof x !== "string" || !["fs-temp", "append-field"].includes(x)
+      } ),
       output: {}
     }
   },
