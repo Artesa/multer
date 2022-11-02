@@ -9,8 +9,14 @@
   ],
   "license": "MIT",
   "repository": "expressjs/multer",
-  "type": "module",
-  "exports": "./index.js",
+  "main": "dist/index.js",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+    }
+  },
   "keywords": [
     "form",
     "post",
