@@ -2,6 +2,7 @@
 import path from "path";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
+import pkg from "./package.json";
 
 export default defineConfig({
   plugins: [
@@ -14,20 +15,14 @@ export default defineConfig({
       entry: path.resolve(__dirname, "lib/index.ts"),
       name: "index",
       fileName: "index",
-      formats: ["es", "cjs"]
+      formats: ["es", "cjs"],
     },
     // outDir: path.resolve(__dirname, "dist"),
     sourcemap: true,
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: [
-        /^node:.*/,
-        "random-path",
-        "fs-temp",
-        "stream-file-type",
-        "express"
-      ],
+      external: [...Object.keys(pkg.dependencies), /^node:/].filter(x => x !== "fs-temp"),
       output: {}
     }
   },
