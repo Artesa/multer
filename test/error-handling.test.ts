@@ -6,8 +6,8 @@ import { promisify } from 'node:util'
 
 import FormData from 'form-data'
 
-import * as util from './_util.js'
-import multer from '../index.js'
+import * as util from './_util'
+import multer from '../lib'
 
 function withLimits (limits, fields) {
   return multer({ limits: limits }).fields(fields)

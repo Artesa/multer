@@ -8,8 +8,8 @@ import FormData from 'form-data'
 import getStream from 'get-stream'
 import _onFinished from 'on-finished'
 
-import * as util from './_util.js'
-import multer from '../index.js'
+import * as util from './_util'
+import multer from '../lib'
 
 const onFinished = promisify(_onFinished)
 
@@ -18,12 +18,12 @@ const port = 34279
 describe('Express Integration', () => {
   let app, server
 
-  before((done) => {
+  beforeAll((done) => {
     app = express()
     server = app.listen(port, done)
   })
 
-  after((done) => {
+  afterAll((done) => {
     server.close(done)
   })
 

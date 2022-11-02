@@ -71,3 +71,5 @@ export default function multer (options: MulterOptions = {}) {
 
   return new Multer(options)
 }
+
+export * from "./types"

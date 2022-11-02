@@ -11,7 +11,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/index.ts"),
+      entry: path.resolve(__dirname, "lib/index.ts"),
       name: "index",
       fileName: "index",
       formats: ["es", "cjs"]
@@ -21,7 +21,13 @@ export default defineConfig({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: [],
+      external: [
+        /^node:.*/,
+        "random-path",
+        "fs-temp",
+        "stream-file-type",
+        "express"
+      ],
       output: {}
     }
   },

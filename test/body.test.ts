@@ -5,17 +5,17 @@ import stream from 'node:stream'
 import { promisify } from 'node:util'
 
 import FormData from 'form-data'
-import hasOwnProperty from 'has-own-property'
 import recursiveNullify from 'recursive-nullify'
 import testData from 'testdata-w3c-json-form'
 
-import * as util from './_util.js'
-import multer from '../index.js'
+import * as util from './_util'
+import multer from '../lib'
+import { hasOwnProperty } from '../lib/utils'
 
 describe('body', () => {
   let parser
 
-  before(() => {
+  beforeAll(() => {
     parser = multer().none()
   })
 

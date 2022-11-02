@@ -3,13 +3,13 @@
 import assert from 'node:assert'
 import FormData from 'form-data'
 
-import * as util from './_util.js'
-import multer from '../index.js'
+import * as util from './_util'
+import multer from '../lib'
 
 describe('upload.fields', () => {
   let parser
 
-  before(() => {
+  beforeAll(() => {
     parser = multer().fields([
       { name: 'CA$|-|', maxCount: 1 },
       { name: 'set-1', maxCount: 3 },

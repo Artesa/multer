@@ -21,3 +21,5 @@ node_modules
 # Code Coverage
 /.nyc_output/
 /coverage/
+
+dist

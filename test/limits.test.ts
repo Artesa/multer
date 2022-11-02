@@ -3,8 +3,8 @@
 import assert from 'node:assert'
 import FormData from 'form-data'
 
-import * as util from './_util.js'
-import multer from '../index.js'
+import * as util from './_util'
+import multer from '../lib'
 
 describe('limits', () => {
   it('should report limit errors', async () => {

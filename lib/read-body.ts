@@ -8,9 +8,9 @@ import _onFinished from 'on-finished'
 import FileType from 'stream-file-type'
 
 import MulterError from './error.js'
-import hasOwnProperty from 'has-own-property'
 import { FileFilter, MulterFile, ParsedLimits } from './types.js'
 import type { Request } from "express";
+import { hasOwnProperty } from "./utils"
 
 const onFinished = promisify(_onFinished)
 const pipeline = promisify(_pipeline)
