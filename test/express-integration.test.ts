@@ -27,8 +27,8 @@ describe('Express Integration', () => {
     server.close(done)
   })
 
-  function submitForm (form, path) {
-    return new Promise((resolve, reject) => {
+  async function submitForm (form, path) {
+    return await new Promise((resolve, reject) => {
       const req = form.submit(`http://localhost:${port}${path}`)
 
       req.on('error', reject)
@@ -45,7 +45,7 @@ describe('Express Integration', () => {
 
   it('should work with express error handling', async () => {
     const limits = { fileSize: 200 }
-    const upload = multer({ limits: limits })
+    const upload = multer({ limits })
     const router = new express.Router()
     const form = new FormData()
 

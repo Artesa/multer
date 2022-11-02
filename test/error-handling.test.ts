@@ -10,7 +10,7 @@ import * as util from './_util'
 import multer from '../lib'
 
 function withLimits (limits, fields) {
-  return multer({ limits: limits }).fields(fields)
+  return multer({ limits }).fields(fields)
 }
 
 function hasCode (code) {

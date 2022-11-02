@@ -9,8 +9,8 @@ import FileType from 'stream-file-type'
 
 import MulterError from './error.js'
 import { FileFilter, MulterFile, ParsedLimits } from './types.js'
-import type { Request } from "express";
-import { hasOwnProperty } from "./utils"
+import type { Request } from 'express'
+import { hasOwnProperty } from './utils'
 
 const onFinished = promisify(_onFinished)
 const pipeline = promisify(_pipeline)
@@ -19,10 +19,10 @@ function drainStream (stream: Readable) {
   stream.on('readable', stream.read.bind(stream))
 }
 
-type CollectFieldsResult = { key: string, value: string }[]
+type CollectFieldsResult = Array<{ key: string, value: string }>
 
-function collectFields (busboy: Busboy, limits: ParsedLimits) {
-  return new Promise<CollectFieldsResult>((resolve, reject) => {
+async function collectFields (busboy: Busboy, limits: ParsedLimits) {
+  return await new Promise<CollectFieldsResult>((resolve, reject) => {
     const result: CollectFieldsResult = []
 
     busboy.on('field', (fieldname, value, fieldnameTruncated, valueTruncated) => {
@@ -37,16 +37,16 @@ function collectFields (busboy: Busboy, limits: ParsedLimits) {
         return reject(new MulterError('LIMIT_FIELD_KEY'))
       }
 
-      result.push({ key: fieldname, value: value })
+      result.push({ key: fieldname, value })
     })
 
     busboy.on('finish', () => resolve(result))
   })
 }
 
-function collectFiles (busboy: Busboy, limits: ParsedLimits, fileFilter: FileFilter) {
-  return new Promise<MulterFile[]>((resolve, reject) => {
-    const result: Promise<MulterFile>[] = []
+async function collectFiles (busboy: Busboy, limits: ParsedLimits, fileFilter: FileFilter) {
+  return await new Promise<MulterFile[]>((resolve, reject) => {
+    const result: Array<Promise<MulterFile>> = []
 
     busboy.on('file', async (fieldname, fileStream, filename, encoding, mimetype) => {
       // Catch all errors on file stream
@@ -102,7 +102,7 @@ function collectFiles (busboy: Busboy, limits: ParsedLimits, fileFilter: FileFil
 }
 
 export default async function readBody (req: Request, limits: ParsedLimits, fileFilter: FileFilter) {
-  const busboy = new Busboy({ headers: req.headers, limits: limits })
+  const busboy = new Busboy({ headers: req.headers, limits })
 
   const fields = collectFields(busboy, limits)
   const files = collectFiles(busboy, limits, fileFilter)

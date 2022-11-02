@@ -82,7 +82,7 @@ export async function assertFile (file, fieldName, fileName) {
 }
 
 export async function assertFiles (files) {
-  await Promise.all(files.map((args) => assertFile(args[0], args[1], args[2])))
+  await Promise.all(files.map(async (args) => await assertFile(args[0], args[1], args[2])))
 }
 
 function getLength (form) {

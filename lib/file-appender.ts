@@ -1,5 +1,5 @@
-import { Field, FileStrategy } from "./types";
-import type { Request } from "express"
+import { Field, FileStrategy } from './types'
+import type { Request } from 'express'
 
 export default function createFileAppender (strategy: FileStrategy, req: Request, fields: Field[]) {
   switch (strategy) {

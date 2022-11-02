@@ -53,7 +53,7 @@ describe('Aborted requests', () => {
 
     const result = promisify(parser)(form.pipe(req), null)
 
-    return assert.rejects(result, err => err.code === 'CLIENT_ABORTED')
+    return await assert.rejects(result, err => err.code === 'CLIENT_ABORTED')
   })
 
   it('should handle clients erroring the request', async () => {
@@ -72,6 +72,6 @@ describe('Aborted requests', () => {
 
     const result = promisify(parser)(form.pipe(req), null)
 
-    return assert.rejects(result, err => err.message === 'TEST_ERROR')
+    return await assert.rejects(result, err => err.message === 'TEST_ERROR')
   })
 })

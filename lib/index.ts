@@ -7,7 +7,7 @@ import { Field, FileStrategy, LimitOptions, Limits, MulterOptions, ParsedLimits 
 const kLimits = Symbol('limits')
 
 function parseLimit (limits: LimitOptions, key: keyof LimitOptions, defaultValue: number | string) {
-  const input = limits[key] == null ? defaultValue : limits[key] as string | number
+  const input = limits[key] == null ? defaultValue : limits[key]
   const value = bytes.parse(input)
   if (!Number.isFinite(value)) throw new Error(`Invalid limit "${key}" given: ${limits[key]}`)
   if (!Number.isInteger(value)) throw new Error(`Invalid limit "${key}" given: ${value}`)
@@ -16,10 +16,10 @@ function parseLimit (limits: LimitOptions, key: keyof LimitOptions, defaultValue
 
 function _middleware (limits: ParsedLimits, fields: Field[], fileStrategy: FileStrategy) {
   return createMiddleware(() => ({
-    fields: fields,
-    limits: limits,
+    fields,
+    limits,
     fileFilter: createFileFilter(fields),
-    fileStrategy: fileStrategy
+    fileStrategy
   }))
 }
 
@@ -36,11 +36,11 @@ class Multer {
   }
 
   single (name: string) {
-    return _middleware(this[kLimits], [{ name: name, maxCount: 1 }], 'VALUE')
+    return _middleware(this[kLimits], [{ name, maxCount: 1 }], 'VALUE')
   }
 
   array (name: string, maxCount?: number) {
-    return _middleware(this[kLimits], [{ name: name, maxCount: maxCount }], 'ARRAY')
+    return _middleware(this[kLimits], [{ name, maxCount }], 'ARRAY')
   }
 
   fields (fields: Field[]) {
@@ -72,4 +72,4 @@ export default function multer (options: MulterOptions = {}) {
   return new Multer(options)
 }
 
-export * from "./types"
+export * from './types'
