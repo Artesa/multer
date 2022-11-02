@@ -23,7 +23,8 @@ export default defineConfig({
       // make sure to externalize deps that shouldn't be bundled
       // into your library
       external: [...Object.keys(pkg.dependencies), /^node:/].filter(x => {
-        return typeof x !== "string" || !["fs-temp", "append-field"].includes(x)
+        const include = ["fs-temp", "append-field", "stream-file-type"];
+        return typeof x !== "string" || !include.includes(x)
       } ),
       output: {}
     }
