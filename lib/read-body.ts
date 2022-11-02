@@ -1,25 +1,29 @@
 import { extname } from 'node:path'
-import { pipeline as _pipeline } from 'node:stream'
+import { pipeline as _pipeline, Readable } from 'node:stream'
 import { promisify } from 'node:util'
 
 import Busboy from '@fastify/busboy'
 import { createWriteStream } from 'fs-temp'
-import hasOwnProperty from 'has-own-property'
 import _onFinished from 'on-finished'
 import FileType from 'stream-file-type'
 
 import MulterError from './error.js'
+import hasOwnProperty from 'has-own-property'
+import { FileFilter, MulterFile, ParsedLimits } from './types.js'
+import type { Request } from "express";
 
 const onFinished = promisify(_onFinished)
 const pipeline = promisify(_pipeline)
 
-function drainStream (stream) {
+function drainStream (stream: Readable) {
   stream.on('readable', stream.read.bind(stream))
 }
 
-function collectFields (busboy, limits) {
-  return new Promise((resolve, reject) => {
-    const result = []
+type CollectFieldsResult = { key: string, value: string }[]
+
+function collectFields (busboy: Busboy, limits: ParsedLimits) {
+  return new Promise<CollectFieldsResult>((resolve, reject) => {
+    const result: CollectFieldsResult = []
 
     busboy.on('field', (fieldname, value, fieldnameTruncated, valueTruncated) => {
       // Currently not implemented (https://github.com/mscdex/busboy/issues/6)
@@ -40,9 +44,9 @@ function collectFields (busboy, limits) {
   })
 }
 
-function collectFiles (busboy, limits, fileFilter) {
-  return new Promise((resolve, reject) => {
-    const result = []
+function collectFiles (busboy: Busboy, limits: ParsedLimits, fileFilter: FileFilter) {
+  return new Promise<MulterFile[]>((resolve, reject) => {
+    const result: Promise<MulterFile>[] = []
 
     busboy.on('file', async (fieldname, fileStream, filename, encoding, mimetype) => {
       // Catch all errors on file stream
@@ -58,7 +62,8 @@ function collectFiles (busboy, limits, fileFilter) {
         return reject(new MulterError('LIMIT_FIELD_KEY'))
       }
 
-      const file = {
+      // @ts-expect-error - MulterFile not complete
+      const file: MulterFile = {
         fieldName: fieldname,
         originalName: filename,
         clientReportedMimeType: mimetype,
@@ -78,7 +83,7 @@ function collectFiles (busboy, limits, fileFilter) {
       const promise = pipeline(fileStream, detector, target)
         .then(async () => {
           await fileClosed
-          file.path = target.path
+          file.path = target.path as string
           file.size = target.bytesWritten
 
           const fileType = await detector.fileTypePromise()
@@ -89,14 +94,14 @@ function collectFiles (busboy, limits, fileFilter) {
         })
         .catch(reject)
 
-      result.push(promise)
+      result.push(promise as Promise<MulterFile>)
     })
 
     busboy.on('finish', () => resolve(Promise.all(result)))
   })
 }
 
-export default async function readBody (req, limits, fileFilter) {
+export default async function readBody (req: Request, limits: ParsedLimits, fileFilter: FileFilter) {
   const busboy = new Busboy({ headers: req.headers, limits: limits })
 
   const fields = collectFields(busboy, limits)

@@ -1,19 +1,20 @@
 import bytes from 'bytes'
 
-import createFileFilter from './lib/file-filter.js'
-import createMiddleware from './lib/middleware.js'
+import createFileFilter from './file-filter.js'
+import createMiddleware from './middleware.js'
+import { Field, FileStrategy, LimitOptions, Limits, MulterOptions, ParsedLimits } from './types.js'
 
 const kLimits = Symbol('limits')
 
-function parseLimit (limits, key, defaultValue) {
-  const input = limits[key] == null ? defaultValue : limits[key]
+function parseLimit (limits: LimitOptions, key: keyof LimitOptions, defaultValue: number | string) {
+  const input = limits[key] == null ? defaultValue : limits[key] as string | number
   const value = bytes.parse(input)
   if (!Number.isFinite(value)) throw new Error(`Invalid limit "${key}" given: ${limits[key]}`)
   if (!Number.isInteger(value)) throw new Error(`Invalid limit "${key}" given: ${value}`)
   return value
 }
 
-function _middleware (limits, fields, fileStrategy) {
+function _middleware (limits: ParsedLimits, fields: Field[], fileStrategy: FileStrategy) {
   return createMiddleware(() => ({
     fields: fields,
     limits: limits,
@@ -23,7 +24,7 @@ function _middleware (limits, fields, fileStrategy) {
 }
 
 class Multer {
-  constructor (options) {
+  constructor (options: MulterOptions) {
     this[kLimits] = {
       fieldNameSize: parseLimit(options.limits || {}, 'fieldNameSize', '100B'),
       fieldSize: parseLimit(options.limits || {}, 'fieldSize', '8KB'),
@@ -34,15 +35,15 @@ class Multer {
     }
   }
 
-  single (name) {
+  single (name: string) {
     return _middleware(this[kLimits], [{ name: name, maxCount: 1 }], 'VALUE')
   }
 
-  array (name, maxCount) {
+  array (name: string, maxCount?: number) {
     return _middleware(this[kLimits], [{ name: name, maxCount: maxCount }], 'ARRAY')
   }
 
-  fields (fields) {
+  fields (fields: Field[]) {
     return _middleware(this[kLimits], fields, 'OBJECT')
   }
 
@@ -60,7 +61,7 @@ class Multer {
   }
 }
 
-export default function multer (options = {}) {
+export default function multer (options: MulterOptions = {}) {
   if (options === null) throw new TypeError('Expected object for argument "options", got null')
   if (typeof options !== 'object') throw new TypeError(`Expected object for argument "options", got ${typeof options}`)
 

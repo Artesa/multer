@@ -1,4 +1,7 @@
-export default function createFileAppender (strategy, req, fields) {
+import { Field, FileStrategy } from "./types";
+import type { Request } from "express"
+
+export default function createFileAppender (strategy: FileStrategy, req: Request, fields: Field[]) {
   switch (strategy) {
     case 'NONE': break
     case 'VALUE': req.file = null; break

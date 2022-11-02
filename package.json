@@ -31,6 +31,10 @@
     "type-is": "^1.6.18"
   },
   "devDependencies": {
+    "@types/bytes": "^3.1.1",
+    "@types/node": "^18.11.9",
+    "@types/on-finished": "^2.3.1",
+    "@types/type-is": "^1.6.3",
     "c8": "^7.7.3",
     "express": "^4.16.4",
     "form-data": "^4.0.0",
@@ -39,7 +43,10 @@
     "mocha": "^9.0.3",
     "recursive-nullify": "^1.0.0",
     "standard": "^16.0.3",
-    "testdata-w3c-json-form": "^1.0.0"
+    "testdata-w3c-json-form": "^1.0.0",
+    "vite": "^3.2.2",
+    "vite-plugin-dts": "^1.6.6",
+    "vitest": "^0.24.4"
   },
   "engines": {
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"

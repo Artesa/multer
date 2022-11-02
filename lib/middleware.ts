@@ -5,8 +5,10 @@ import is from 'type-is'
 
 import createFileAppender from './file-appender.js'
 import readBody from './read-body.js'
+import type { Request, Response, NextFunction } from 'express'
+import { CreateMiddlewareOptions } from './types.js'
 
-async function handleRequest (setup, req) {
+async function handleRequest (setup: () => CreateMiddlewareOptions, req: Request) {
   const options = setup()
   const result = await readBody(req, options.limits, options.fileFilter)
 
@@ -26,8 +28,8 @@ async function handleRequest (setup, req) {
   }
 }
 
-export default function createMiddleware (setup) {
-  return function multerMiddleware (req, _, next) {
+export default function createMiddleware (setup: () => CreateMiddlewareOptions) {
+  return function multerMiddleware (req: Request, _: Response, next: NextFunction) {
     if (!is(req, ['multipart'])) return next()
     handleRequest(setup, req).then(next, next)
   }
