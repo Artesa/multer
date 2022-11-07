@@ -1,12 +1,6 @@
 name: Node CI
 
-on:
-  pull_request:
-    branches:
-    - master
-  push:
-    branches:
-    - explore-new-api
+on: [push, pull_request]
 
 jobs:
   test:
