@@ -55,7 +55,7 @@
     "vitest": "^0.24.4"
   },
   "engines": {
-    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+    "node": ">=16.0.0"
   },
   "files": [
     "LICENSE",
@@ -65,7 +65,8 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "vite build",
-    "test": "c8 --check-coverage --statements 100 vitest run",
+    "test": "vitest run",
+    "coverage": "c8 --check-coverage --statements 85 npm run test",
     "lint": "ts-standard --fix"
   },
   "ts-standard": {
