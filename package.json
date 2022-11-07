@@ -65,7 +65,7 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "vite build",
-    "test": "ts-standard && c8 --check-coverage --statements 100 vitest run",
+    "test": "c8 --check-coverage --statements 100 vitest run",
     "lint": "ts-standard --fix"
   },
   "ts-standard": {

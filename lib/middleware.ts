@@ -31,6 +31,6 @@ async function handleRequest (setup: () => CreateMiddlewareOptions, req: Request
 export default function createMiddleware (setup: () => CreateMiddlewareOptions) {
   return function multerMiddleware (req: Request, _: Response, next: NextFunction) {
     if (!is(req, ['multipart'])) return next()
-    handleRequest(setup, req).then(next, next)
+    handleRequest(setup, req).then(() => next()).catch((err) => next(err))
   }
 }

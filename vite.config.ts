@@ -17,6 +17,7 @@ export default defineConfig({
       fileName: "index",
       formats: ["es", "cjs"],
     },
+    minify: false,
     // outDir: path.resolve(__dirname, "dist"),
     sourcemap: true,
     rollupOptions: {
@@ -26,7 +27,9 @@ export default defineConfig({
         const include = ["fs-temp", "append-field", "stream-file-type"];
         return typeof x !== "string" || !include.includes(x)
       } ),
-      output: {}
+      output: {
+        compact: false,
+      }
     }
   },
   test: {
